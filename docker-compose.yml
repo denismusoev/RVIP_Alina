@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: animal_user
+      POSTGRES_PASSWORD: animal_pass
+      POSTGRES_DB: animal_db
+    ports:
+      - "5432:5432"
+    networks:
+      backend:
+        aliases:
+          - "db"
+  back:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      db_url: jdbc:postgresql://db:5432/animal_db
+      db_username: animal_user
+      db_password: animal_pass
+
+    networks:
+      backend:
+        aliases:
+          - "back"
+
+networks:
+  backend:
+    driver: bridge
